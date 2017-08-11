@@ -127,9 +127,9 @@ Player.prototype.update = function () {
 };
 
 Player.prototype.chooseDirection = function () {
-    if (this.isUp)    this.drawY -= this.pace;
-    if (this.isDown)  this.drawY += this.pace;
-    if (this.isLeft)  this.drawX -= this.pace;
+    if (this.isUp) this.drawY -= this.pace;
+    if (this.isDown) this.drawY += this.pace;
+    if (this.isLeft) this.drawX -= this.pace;
     if (this.isRight) this.drawX += this.pace;
 };
 
@@ -142,21 +142,25 @@ function checkKeyDown(e) {
     var keyID = e.keyCode || e.which;
     var keyChar = String.fromCharCode(keyID);
 
-    if (keyChar == "W") {
-        playerObj.isUp = true;
-        e.preventDefault();
-    }
-    if(keyChar == "S") {
-        playerObj.isDown = true;
-        e.preventDefault();
-    }
-    if(keyChar == "A") {
-        playerObj.isLeft = true;
-        e.preventDefault();
-    }
-    if(keyChar == "D") {
-        playerObj.isRight = true;
-        e.preventDefault();
+    switch (keyChar) {
+        case "W":
+            playerObj.isUp = true;
+            e.preventDefault();
+            break;
+        case "S":
+            playerObj.isDown = true;
+            e.preventDefault();
+            break;
+        case "A":
+            playerObj.isLeft = true;
+            e.preventDefault();
+            break;
+        case "D":
+            playerObj.isRight = true;
+            e.preventDefault();
+            break;
+        //default:
+        //   return;
     }
 }
 
@@ -164,21 +168,25 @@ function checkKeyUp(e) {
     var keyID = e.keyCode || e.which;
     var keyChar = String.fromCharCode(keyID);
 
-    if (keyChar == "W") {
-        playerObj.isUp = false;
-        e.preventDefault();
-    }
-    if(keyChar == "S") {
-        playerObj.isDown = false;
-        e.preventDefault();
-    }
-    if(keyChar == "A") {
-        playerObj.isLeft = false;
-        e.preventDefault();
-    }
-    if(keyChar == "D") {
-        playerObj.isRight = false;
-        e.preventDefault();
+    switch (keyChar) {
+        case "W":
+            playerObj.isUp = false;
+            e.preventDefault();
+            break;
+        case "S":
+            playerObj.isDown = false;
+            e.preventDefault();
+            break;
+        case "A":
+            playerObj.isLeft = false;
+            e.preventDefault();
+            break;
+        case "D":
+            playerObj.isRight = false;
+            e.preventDefault();
+            break;
+        //default:
+        //   return;
     }
 }
 
