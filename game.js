@@ -55,6 +55,9 @@ function init() {
     drawBg();
 
     startLoop();
+
+    document.addEventListener('keydown', checkKeyDown, false);
+    document.addEventListener('keyup', checkKeyUp, false);
 }
 
 function draw() {
@@ -92,7 +95,14 @@ function Player() {
     this.width = 200;
     this.height = 147;
 
-    this.speed = 5;
+    //this.speed = 5;
+    this.pace = 3;
+
+    //For keys
+    this.isUp = false;
+    this.isDown = false;
+    this.isLeft = false;
+    this.isRight = false;
 }
 
 function Enemy() {
@@ -113,13 +123,64 @@ Player.prototype.draw = function () {
 };
 
 Player.prototype.update = function () {
-    this.drawX += this.speed;
+    this.chooseDirection();
+};
+
+Player.prototype.chooseDirection = function () {
+    if (this.isUp)    this.drawY -= this.pace;
+    if (this.isDown)  this.drawY += this.pace;
+    if (this.isLeft)  this.drawX -= this.pace;
+    if (this.isRight) this.drawX += this.pace;
 };
 
 Enemy.prototype.draw = function () {
     ctxEnemy.drawImage(tiles, this.srcX, this.srcY, this.width, this.height,
         this.drawX, this.drawY, this.width, this.height);
 };
+
+function checkKeyDown(e) {
+    var keyID = e.keyCode || e.which;
+    var keyChar = String.fromCharCode(keyID);
+
+    if (keyChar == "W") {
+        playerObj.isUp = true;
+        e.preventDefault();
+    }
+    if(keyChar == "S") {
+        playerObj.isDown = true;
+        e.preventDefault();
+    }
+    if(keyChar == "A") {
+        playerObj.isLeft = true;
+        e.preventDefault();
+    }
+    if(keyChar == "D") {
+        playerObj.isRight = true;
+        e.preventDefault();
+    }
+}
+
+function checkKeyUp(e) {
+    var keyID = e.keyCode || e.which;
+    var keyChar = String.fromCharCode(keyID);
+
+    if (keyChar == "W") {
+        playerObj.isUp = false;
+        e.preventDefault();
+    }
+    if(keyChar == "S") {
+        playerObj.isDown = false;
+        e.preventDefault();
+    }
+    if(keyChar == "A") {
+        playerObj.isLeft = false;
+        e.preventDefault();
+    }
+    if(keyChar == "D") {
+        playerObj.isRight = false;
+        e.preventDefault();
+    }
+}
 
 function drawRect() {
     ctxMap.fillStyle = '#3d3d3d';
