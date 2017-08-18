@@ -1,8 +1,8 @@
 window.onload = init;
 
 var map, ctxMap;
-var player, ctxPlayer;
-var enemy, ctxEnemy;
+var playerCanvas, ctxPlayerCanvas;
+var enemyCanvas, ctxEnemyCanvas;
 var drawBtn, clearBtn;
 var gameWidth = 800,
     gameHeight = 500;
@@ -13,8 +13,7 @@ bg.src = 'images/bg.jpg';
 var tiles = new Image();
 tiles.src = 'images/sprite.png';
 
-var playerObj,
-    //enemyObj;
+var player,
     enemies = [];
 
 var isPlaying;
@@ -34,20 +33,20 @@ function init() {
     map = document.getElementById('map');
     ctxMap = map.getContext('2d');
 
-    player = document.getElementById('player');
-    ctxPlayer = player.getContext('2d');
+    playerCanvas = document.getElementById('player');
+    ctxPlayerCanvas = playerCanvas.getContext('2d');
 
-    enemy = document.getElementById('enemy');
-    ctxEnemy = enemy.getContext('2d');
+    enemyCanvas = document.getElementById('enemy');
+    ctxEnemyCanvas = enemyCanvas.getContext('2d');
 
     map.width = gameWidth;
     map.height = gameHeight;
 
-    player.width = gameWidth;
-    player.height = gameHeight;
+    playerCanvas.width = gameWidth;
+    playerCanvas.height = gameHeight;
 
-    enemy.width = gameWidth;
-    enemy.height = gameHeight;
+    enemyCanvas.width = gameWidth;
+    enemyCanvas.height = gameHeight;
 
     drawBtn = document.getElementById('drawBtn');
     clearBtn = document.getElementById('clearBtn');
@@ -55,8 +54,7 @@ function init() {
     drawBtn.addEventListener('click', drawRect, false);
     clearBtn.addEventListener('click', clearRect, false);
 
-    playerObj = new Player();
-    //enemyObj = new Enemy();
+    player = new Player();
 
     drawBg();
 
@@ -84,18 +82,16 @@ function stopCreatingEnemies() {
 }
 
 function draw() {
-    playerObj.draw();
-    //enemyObj.draw();
+    player.draw();
 
-    clearCtxEnemy();
+    clearCtxEnemyCanvas();
     for (var i = 0; i < enemies.length; i++) {
         enemies[i].draw();
     }
 }
 
 function update() {
-    playerObj.update();
-    //enemyObj.update();
+    player.update();
     for (var i = 0; i < enemies.length; i++) {
         enemies[i].update();
     }
@@ -128,8 +124,7 @@ function Player() {
     this.width = 200;
     this.height = 147;
 
-    //this.speed = 5;
-    this.pace = 3;
+    this.speed = 5;
 
     //For keys
     this.isUp = false;
@@ -146,12 +141,12 @@ function Enemy() {
     this.drawX = Math.floor(Math.random() * gameWidth) + gameWidth;
     this.drawY = Math.floor(Math.random() * (gameHeight - this.height));
 
-    this.speed = 8;
+    this.speed = 7;
 }
 
 Player.prototype.draw = function () {
     clearCtxPlater();
-    ctxPlayer.drawImage(tiles, this.srcX, this.srcY, this.width, this.height,
+    ctxPlayerCanvas.drawImage(tiles, this.srcX, this.srcY, this.width, this.height,
         this.drawX, this.drawY, this.width, this.height);
 };
 
@@ -164,24 +159,26 @@ Player.prototype.update = function () {
 };
 
 Player.prototype.chooseDirection = function () {
-    if (this.isUp) this.drawY -= this.pace;
-    if (this.isDown) this.drawY += this.pace;
-    if (this.isLeft) this.drawX -= this.pace;
-    if (this.isRight) this.drawX += this.pace;
+    if (this.isUp) this.drawY -= this.speed;
+    if (this.isDown) this.drawY += this.speed;
+    if (this.isLeft) this.drawX -= this.speed;
+    if (this.isRight) this.drawX += this.speed;
 };
 
 Enemy.prototype.draw = function () {
-    //clearCtxEnemy();
-    ctxEnemy.drawImage(tiles, this.srcX, this.srcY, this.width, this.height,
+    ctxEnemyCanvas.drawImage(tiles, this.srcX, this.srcY, this.width, this.height,
         this.drawX, this.drawY, this.width, this.height);
 };
 
 Enemy.prototype.update = function () {
-    this.drawX -= 7;
+    this.drawX -= this.speed;
     if (this.drawX < -this.width) {
-        this.drawX = Math.floor(Math.random() * gameWidth) + gameWidth;
-        this.drawY = Math.floor(Math.random() * (gameHeight - this.height));
+        this.destroy();
     }
+};
+
+Enemy.prototype.destroy = function () {
+    enemies.splice(enemies.indexOf(this), 1);
 };
 
 function checkKeyDown(e) {
@@ -190,19 +187,19 @@ function checkKeyDown(e) {
 
     switch (keyChar) {
         case "W":
-            playerObj.isUp = true;
+            player.isUp = true;
             e.preventDefault();
             break;
         case "S":
-            playerObj.isDown = true;
+            player.isDown = true;
             e.preventDefault();
             break;
         case "A":
-            playerObj.isLeft = true;
+            player.isLeft = true;
             e.preventDefault();
             break;
         case "D":
-            playerObj.isRight = true;
+            player.isRight = true;
             e.preventDefault();
             break;
         //default:
@@ -216,19 +213,19 @@ function checkKeyUp(e) {
 
     switch (keyChar) {
         case "W":
-            playerObj.isUp = false;
+            player.isUp = false;
             e.preventDefault();
             break;
         case "S":
-            playerObj.isDown = false;
+            player.isDown = false;
             e.preventDefault();
             break;
         case "A":
-            playerObj.isLeft = false;
+            player.isLeft = false;
             e.preventDefault();
             break;
         case "D":
-            playerObj.isRight = false;
+            player.isRight = false;
             e.preventDefault();
             break;
         //default:
@@ -246,11 +243,11 @@ function clearRect() {
 }
 
 function clearCtxPlater() {
-    ctxPlayer.clearRect(0, 0, gameWidth, gameHeight);
+    ctxPlayerCanvas.clearRect(0, 0, gameWidth, gameHeight);
 }
 
-function clearCtxEnemy() {
-    ctxEnemy.clearRect(0, 0, gameWidth, gameHeight);
+function clearCtxEnemyCanvas() {
+    ctxEnemyCanvas.clearRect(0, 0, gameWidth, gameHeight);
 }
 
 function drawBg() {
